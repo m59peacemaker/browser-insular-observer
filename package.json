@@ -1,0 +1,39 @@
+{
+  "name": "insularify-observer",
+  "version": "0.0.0",
+  "description": "Efficiently reuse an observer instance (i.e `IntersectionObserver`) for multiple targets using pretty, simple code.",
+  "keywords": [
+    "IntersectionObserver",
+    "ResizeObserver",
+    "Observer",
+    "observe",
+    "callback",
+    "listener",
+    "one",
+    "single",
+    "element",
+    "target",
+    "just",
+    "only",
+    "better",
+    "API",
+    "simple"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "test": "browserify test.js | tape-run --browser chrome --keepOpen"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m59peacemaker/browser-insularify-observer"
+  },
+  "author": "Johnny Hauser <johnnyhauser@gmail.com>",
+  "license": "CC0-1.0",
+  "dependencies": {
+    "key-master": "^3.0.0",
+    "nop": "^1.0.0"
+  },
+  "devDependencies": {
+    "tape": "^4.7.0"
+  }
+}
