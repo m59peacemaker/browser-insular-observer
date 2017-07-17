@@ -1,54 +1,39 @@
-const noop = require('nop')
 const keyMaster = require('key-master')
 
-const insularifyObserver = Observer => {
-  function InsularObserver (callback, options) {
-    const map = keyMaster(() => [], new WeakMap())
+const InsularObserver = (Observer, options) => {
+  const listeners = keyMaster(() => [], new WeakMap())
 
-    if (typeof callback !== 'function') {
-      options = callback
-      callback = noop
-    }
-
-    const observer = new Observer(entries => {
-      entries.forEach(entry => {
-        const listeners = map.get(entry.target)
-        listeners.forEach(listener => listener(entry))
-      })
-    }, options)
-
-    const originalObserve = observer.observe.bind(observer)
-    observer.observe = function (target, options, listener) {
-      if (typeof options === 'function') {
-        listener = options
-        options = undefined
-      }
-
-      listener && map.get(target).push(listener)
-      originalObserve(target, options)
-    }
-
-    const originalUnobserve = (observer.unobserve || noop).bind(observer)
-    observer.unobserve = (target, listener) => {
-      const listeners = map.get(target)
-
-      if (listener) {
-        const idx = listeners.indexOf(listener)
-        if (idx !== -1) {
-          listeners.splice(idx , 1)
-        }
-      }
-
-      if (!listener || listeners.length === 0) {
-        map.delete(target)
-        return originalUnobserve(target)
-      }
-    }
-
-    return observer
+  const callback = entries => {
+    entries.forEach(entry => {
+      const targetListeners = listeners.get(entry.target)
+      targetListeners.forEach(listener => listener(entry))
+    })
   }
 
-  return InsularObserver
+  const observer = new Observer(callback, options)
+
+  function observe (target, options, listener) {
+    if (typeof options === 'function') {
+      listener = options
+      options = undefined
+    }
+
+    const targetListeners = listeners.get(target)
+    targetListeners.push(listener)
+    observer.observe(target, options)
+
+    return function unobserve () {
+      const idx = targetListeners.indexOf(listener)
+      targetListeners.splice(idx , 1)
+
+      if (targetListeners.length === 0) {
+        listeners.delete(target)
+        return observer.unobserve && observer.unobserve(target)
+      }
+    }
+  }
+
+  return observe
 }
 
-module.exports = insularifyObserver
+module.exports = InsularObserver
