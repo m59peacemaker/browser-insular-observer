@@ -31,6 +31,13 @@
     "url": "https://github.com/m59peacemaker/browser-insular-observer"
   },
   "author": "Johnny Hauser <johnnyhauser@gmail.com>",
+  "contributors": [
+    {
+      "name": "Martin Jurča",
+      "email": "martin.jurca@firma.seznam.cz",
+      "url": "https://github.com/jurca"
+    }
+  ],
   "license": "CC0-1.0",
   "dependencies": {
     "key-master": "^4.1.0",
