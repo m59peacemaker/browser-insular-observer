@@ -40,13 +40,13 @@
   ],
   "license": "CC0-1.0",
   "dependencies": {
-    "key-master": "^4.1.0",
-    "tslint": "^5.18.0"
+    "key-master": "^4.1.0"
   },
   "devDependencies": {
     "browserify": "^16.3.0",
     "tape": "^4.7.0",
     "tape-run": "^6.0.0",
+    "tslint": "^5.18.0",
     "typescript": "^3.5.3"
   }
 }
