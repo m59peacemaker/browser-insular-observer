@@ -4,6 +4,7 @@
   "description": "Efficiently use an Observer (i.e. IntersectionObserver) without the ugly observer callback. `insular-observer` gives you a simple, per-target `observe/unobserve` API that uses the same observer instance internally.",
   "main": "index.js",
   "scripts": {
+    "compile": "tsc --project .",
     "test": "browserify test.js | tape-run --browser chrome"
   },
   "keywords": [
