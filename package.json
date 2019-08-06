@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run compile && npm run test",
     "compile": "tsc --project .",
-    "test": "tsc --project tsconfig-test.json && browserify test.js | tape-run --browser chrome",
+    "test": "tsc --project tsconfig-test.json && browserify test.js | tape-run",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
