@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc --project .",
-    "test": "browserify test.js | tape-run --browser chrome"
+    "test": "tsc --project tsconfig-test.json && browserify test.js | tape-run --browser chrome"
   },
   "keywords": [
     "IntersectionObserver",
