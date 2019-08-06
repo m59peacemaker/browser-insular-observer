@@ -30,7 +30,7 @@
   "author": "Johnny Hauser <johnnyhauser@gmail.com>",
   "license": "CC0-1.0",
   "dependencies": {
-    "key-master": "^3.0.0"
+    "key-master": "^4.1.0"
   },
   "devDependencies": {
     "browserify": "^16.3.0",
