@@ -1,35 +1,45 @@
 import keyMaster = require('key-master')
 
-interface Observer<T, O> {
-  observe(target: T, options?: O): void
-  unobserve?(target: T): void
+interface Observer<Target, Options> {
+  observe(target: Target, options?: Options): void
+  unobserve?(target: Target): void
 }
 
-interface ObserverEntry<T> {
-  target: T
+interface ObserverEntry<Target> {
+  target: Target
 }
 
-type ObserverCallback<T, E extends ObserverEntry<T>> = (entries: E[]) => void
+type ObserverCallback<Target, Entry extends ObserverEntry<Target>> = (entries: Entry[]) => void
 
-type ObserverClass<T, O, E extends ObserverEntry<T>> = (
-  new(callback: ObserverCallback<T, E>, options?: O) => Observer<T, O>
+type ObserverClass<Target, Options, Entry extends ObserverEntry<Target>> = (
+  new(callback: ObserverCallback<Target, Entry>, options?: Options) => Observer<Target, Options>
 )
 
-type TargetListener<T, E extends ObserverEntry<T>> = (entry: E) => void
+type TargetListener<Target, Entry extends ObserverEntry<Target>> = (entry: Entry) => void
 
-interface ObserveCallback<T, O, E extends ObserverEntry<T>, L extends TargetListener<T, E>> {
-  (target: T, listener: L): UnobserveCallback
-  (target: T, options: O, listener: L): UnobserveCallback
+interface ObserveCallback<
+  Target,
+  Options,
+  Entry extends ObserverEntry<Target>,
+  Listener extends TargetListener<Target, Entry>,
+> {
+  (target: Target, listener: Listener): UnobserveCallback
+  (target: Target, options: Options, listener: Listener): UnobserveCallback
 }
 type UnobserveCallback = () => void
 
-const InsularObserver = <T extends object, O, E extends ObserverEntry<T>, L extends TargetListener<T, E>>(
-  ObserverConstructor: ObserverClass<T, O, E>,
-  options?: O,
-): ObserveCallback<T, O, E, L> => {
-  const listeners = keyMaster<T, L[]>(() => [], new WeakMap<T, L[]>())
+const InsularObserver = <
+  Target extends object,
+  Options,
+  Entry extends ObserverEntry<Target>,
+  Listener extends TargetListener<Target, Entry>,
+>(
+  ObserverConstructor: ObserverClass<Target, Options, Entry>,
+  options?: Options,
+): ObserveCallback<Target, Options, Entry, Listener> => {
+  const listeners = keyMaster<Target, Listener[]>(() => [], new WeakMap<Target, Listener[]>())
 
-  const callback = (entries: E[]) => {
+  const callback = (entries: Entry[]) => {
     entries.forEach(entry => {
       const targetListeners = listeners.get(entry.target)
       targetListeners.forEach(listener => listener(entry))
@@ -38,18 +48,22 @@ const InsularObserver = <T extends object, O, E extends ObserverEntry<T>, L exte
 
   const observer = new ObserverConstructor(callback, options)
 
-  function observe (target: T, observeOptions: undefined | O | L, listener?: L): UnobserveCallback {
+  function observe (
+    target: Target,
+    observeOptions: undefined | Options | Listener,
+    listener?: Listener,
+  ): UnobserveCallback {
     if (typeof observeOptions === 'function') {
-      listener = observeOptions as L
+      listener = observeOptions as Listener
       observeOptions = undefined
     }
 
     const targetListeners = listeners.get(target)
-    targetListeners.push(listener as L)
+    targetListeners.push(listener as Listener)
     observer.observe(target, observeOptions)
 
     return function unobserve (): void {
-      const idx = targetListeners.indexOf(listener as L)
+      const idx = targetListeners.indexOf(listener as Listener)
       targetListeners.splice(idx , 1)
 
       if (targetListeners.length === 0) {
