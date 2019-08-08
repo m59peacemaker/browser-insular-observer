@@ -7,5 +7,4 @@ node_modules
 *.log
 *.tmp
 .idea/
-index.d.*
-index.js*
+dist/

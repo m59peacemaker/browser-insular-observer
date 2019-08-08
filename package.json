@@ -2,7 +2,7 @@
   "name": "insular-observer",
   "version": "0.0.0",
   "description": "Efficiently use an Observer (i.e. IntersectionObserver) without the ugly observer callback. `insular-observer` gives you a simple, per-target `observe/unobserve` API that uses the same observer instance internally.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "npm run test && npm run compile",
     "compile": "tsc --project .",
