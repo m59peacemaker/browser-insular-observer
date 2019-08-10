@@ -8,23 +8,25 @@ test('InsularObserver() returns a function', t => {
 })
 
 test('observe(target, listener)', t => {
+  t.plan(2)
   const observe = InsularObserver(IntersectionObserver)
 
   const d1 = Div()
   const d2 = Div()
-  observe(d1, e => t.equal(e.target, d1))
-  observe(d2, e => t.equal(e.target, d2))
+  observe(d1, e => t.equal(e.target, d1, 'intersection observer called its callback'))
+  observe(d2, e => t.equal(e.target, d2, 'intersection observer called its callback'))
 
   t.end()
 })
 
 test('observe(target, options, listener)', t => {
+  t.plan(2)
   const observe = InsularObserver(MutationObserver)
 
   const div = Div()
   observe(div, { attributes: true }, mutation => {
-    t.equal(mutation.type, 'attributes')
-    t.equal(mutation.attributeName, 'contenteditable')
+    t.equal(mutation.type, 'attributes', 'mutation observer called its callback with correct { type }')
+    t.equal(mutation.attributeName, 'contenteditable', 'and correct { attributeName }')
   })
   div.contenteditable = true
 
