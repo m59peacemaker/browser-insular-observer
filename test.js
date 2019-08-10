@@ -7,16 +7,23 @@ test('InsularObserver() returns a function', t => {
   t.end()
 })
 
+
 test('observe(target, listener)', t => {
   t.plan(2)
   const observe = InsularObserver(IntersectionObserver)
 
   const d1 = Div()
   const d2 = Div()
-  observe(d1, e => t.equal(e.target, d1, 'intersection observer called its callback'))
-  observe(d2, e => t.equal(e.target, d2, 'intersection observer called its callback'))
-
-  t.end()
+  const unobserves = [
+    observe(d1, e => t.equal(e.target, d1, 'intersection observer called its callback')),
+    observe(d2, e => t.equal(e.target, d2, 'intersection observer called its callback'))
+  ]
+  ;[ d1, d2 ].forEach(element => document.body.appendChild(element))
+  setTimeout(() => {
+    unobserves.forEach(f => f())
+    ;[ d1, d2 ].forEach(element => document.body.removeChild(element))
+    t.end()
+  }, 1000)
 })
 
 test('observe(target, options, listener)', t => {
@@ -24,13 +31,18 @@ test('observe(target, options, listener)', t => {
   const observe = InsularObserver(MutationObserver)
 
   const div = Div()
-  observe(div, { attributes: true }, mutation => {
+  document.body.appendChild(div)
+  const unobserve = observe(div, { attributes: true }, mutation => {
     t.equal(mutation.type, 'attributes', 'mutation observer called its callback with correct { type }')
     t.equal(mutation.attributeName, 'contenteditable', 'and correct { attributeName }')
   })
-  div.contenteditable = true
+  div.contentEditable = true
 
-  t.end()
+  setTimeout(() => {
+    unobserve()
+    document.body.removeChild(div)
+    t.end()
+  }, 1000)
 })
 
 test('unobserve() removes listener', t => {
