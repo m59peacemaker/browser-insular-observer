@@ -14,11 +14,11 @@ test('observe(target, listener)', t => {
 
   const d1 = Div()
   const d2 = Div()
+  ;[ d1, d2 ].forEach(element => document.body.appendChild(element))
   const unobserves = [
     observe(d1, e => t.equal(e.target, d1, 'intersection observer called its callback')),
     observe(d2, e => t.equal(e.target, d2, 'intersection observer called its callback'))
   ]
-  ;[ d1, d2 ].forEach(element => document.body.appendChild(element))
   setTimeout(() => {
     unobserves.forEach(f => f())
     ;[ d1, d2 ].forEach(element => document.body.removeChild(element))
