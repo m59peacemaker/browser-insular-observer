@@ -1,5 +1,7 @@
 # insular-observer
 
+![TypeScript supported](https://img.shields.io/npm/types/insular-observer.svg)
+
 Efficiently use an Observer (i.e. IntersectionObserver) without the ugly observer callback. `insular-observer` gives you a simple, per-target `observe/unobserve` API that uses the same observer instance internally.
 
 ## Huh?
